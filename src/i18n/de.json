@@ -1,0 +1,25 @@
+{
+  "full_name": "Vollständiger Name",
+  "full_name_placeholder": "Gib deinen vollständigen Namen ein",
+  "mail": "E-Mail-Adresse",
+  "mail_placeholder": "Gib deine E-Mail-Adresse ein",
+  "phone": "Telefon",
+  "phone_placeholder": "xxx-xxx-xxxx",
+  "message": "Nachricht",
+  "message_placeholder": "Schreibe eine Nachricht",
+  "select": "Benötigter Service",
+  "select_placeholder": "Wähle einen Service aus",
+  "select_options": [
+    { "key": "Sicherheit", "value": "safety" },
+    { "key": "Sicherheit", "value": "security" },
+    { "key": "Datenspeicherung", "value": "data-keeping" }
+  ],
+  "submit": "Nachricht senden",
+  "read_more": "Jetzt starten",
+  "anything_else": "Noch etwas?",
+  "contact_message_placeholder": "Deine Nachricht hier...",
+  "page_not_found": "Seite nicht gefunden",
+  "page_not_found_content": "Ups! Sieht so aus, als wärst du falsch abgebogen. Wir helfen dir, wieder zurückzufinden. Versuch es mit der Suchleiste oben.",
+  "back_to_home": "Zurück zur Startseite",
+  "get_started": "Kostenlos starten"
+}

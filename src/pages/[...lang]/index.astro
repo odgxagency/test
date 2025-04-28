@@ -1,0 +1,76 @@
+---
+import Faq from "@/components/Faq.astro";
+import Feature from "@/components/home/Feature.astro";
+import Hero from "@/components/home/Hero.astro";
+import Reasons from "@/components/home/Reasons.astro";
+import Video from "@/components/home/Video.astro";
+import Base from "@/layouts/Base.astro";
+import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
+import { getLangFromUrl, supportedLang } from "@/lib/utils/languageParser";
+import Testimonial from "@/partials/Testimonial.astro";
+import type { ContentEntryMap } from "astro:content";
+
+export function getStaticPaths() {
+  const paths = supportedLang.map((lang) => ({
+    params: { lang: lang || undefined },
+  }));
+  return paths;
+}
+
+const { lang } = Astro.params;
+const language = lang || getLangFromUrl(Astro.url);
+
+// 🟢 Lade Inhalte wie vorher aus der Markdown-Datei
+const homepage = await getListPage("homepage", lang as keyof ContentEntryMap);
+const { feature, video, reason } = homepage[0].data;
+
+
+// ✅ Always fetch from the local WordPress instance
+const wpSlug = lang === "en" ? "homepage-en" : "homepage-de";
+const username = "adjective";
+const password = "marvelous";
+const auth = btoa(`${username}:${password}`);
+
+const res = await fetch(`https://next-boats.localsite.io/wp-json/wp/v2/pages?slug=${wpSlug}`, {
+  headers: {
+    Authorization: `Basic ${auth}`,
+  },
+});
+const data = await res.json();
+const wpPage = data.length > 0 ? data[0] : null;
+
+const buttons = [];
+
+if (wpPage?.acf?.hero_button_label && wpPage?.acf?.hero_button_link) {
+  buttons.push({
+    label: wpPage.acf.hero_button_label,
+    link: wpPage.acf.hero_button_link,
+  });
+}
+
+
+const hero = {
+  title: wpPage?.acf?.hero_title || "Digital X Agency",
+  content: wpPage?.acf?.hero_content || "<p>Ihre B2b Agentur für Fintech und Business.</p>",
+  images: wpPage?.acf?.hero_images ? [wpPage.acf.hero_images.url] : [],
+  buttons,
+  client_logos: homepage[0].data.hero.client_logos,
+};
+
+const testimonialData = await getSinglePage(
+  "testimonialSection",
+  lang as keyof ContentEntryMap,
+  "testimonial"
+);
+const testimonial = testimonialData.length > 0 ? testimonialData : [];
+
+---
+
+<Base>
+  <Hero {hero} />
+  <Feature {feature} />
+  <Video {video} />
+  <Reasons {reason} />
+  <Testimonial testimonial={testimonial} />
+  <Faq />
+</Base>
